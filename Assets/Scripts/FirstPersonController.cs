@@ -41,6 +41,8 @@ public class FirstPersonController : MonoBehaviour
 
     private PlayerInput playerInput;
 
+    private Vector2 input;
+
     private void Awake()
     {
         controller = GetComponent<CharacterController>();
@@ -51,9 +53,26 @@ public class FirstPersonController : MonoBehaviour
 
     private void OnEnable()
     {
-        playerInput.actions["Jump"].started += Jump; ;
+        //started, 
+        //performed, se lanza siempre que haya cambios, cuando no hay cambios ya no se vuelve a lanzar el evento
+        //canceled
+        playerInput.actions["Jump"].started += Jump;
+        playerInput.actions["Move"].performed += Move;
+        playerInput.actions["Move"].canceled += MoveCanceled; ;
     }
 
+    ////////// GESTIÓN DEL MOVIMIENTO (ctx = contexto, se refiere a que, se ha producido un movimeinto pero, con que valor?)
+    private void Move(InputAction.CallbackContext ctx)
+    {
+        input = ctx.ReadValue<Vector2>();
+    }
+
+    private void MoveCanceled(InputAction.CallbackContext ctx)
+    {
+        input = Vector2.zero;
+    }
+
+    /// PARA SALTAR
     private void Jump(InputAction.CallbackContext obj)
     {
         if (IsGrounded())
@@ -93,12 +112,6 @@ public class FirstPersonController : MonoBehaviour
 
     private void MoveAndRotate()
     {
-        //Lectura de inputs
-        float h = Input.GetAxisRaw("Horizontal");
-        float v = Input.GetAxisRaw("Vertical");
-
-        Vector2 input = new Vector2(h, v).normalized;
-
 
         //Se aplica al cuerpo la rotación que tenga la cámara.
         transform.rotation = Quaternion.Euler(0, cam.transform.eulerAngles.y, 0);
