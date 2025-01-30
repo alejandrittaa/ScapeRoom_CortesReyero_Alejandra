@@ -53,12 +53,19 @@ public class FirstPersonController : MonoBehaviour
 
     private void OnEnable()
     {
-        //started, 
-        //performed, se lanza siempre que haya cambios, cuando no hay cambios ya no se vuelve a lanzar el evento
-        //canceled
+        //Nos suscribimos a las acciones en el enable
+
+        //DIFERENCIAS ENTRE CADA TIPO INPUT:
+
+        //started, coge los datos de cuando se realiza una acción, solo la acción de inicio (ejemplo, en caso de un boton es lo mismo que el performed, no seria lo mismo con un gatillo, el start )
+        //performed, coge los datos de una acción que se está realizando, desde que empieza hasta que termina (se lanza siempre que haya cambios, cuando no hay cambios ya no se vuelve a lanzar el evento)
+        //canceled, cancela el performed
         playerInput.actions["Jump"].started += Jump;
         playerInput.actions["Move"].performed += Move;
-        playerInput.actions["Move"].canceled += MoveCanceled; ;
+        playerInput.actions["Move"].canceled += MoveCanceled;
+
+        //playerInput.SwitchCurrentActionMap("UI"); //cambiamos los controles a un sitio donde no podamos realizar lo anterior
+        //playerInput.deviceLostEvent.AddListener((x)=> Debug.Log("Device perdido"));
     }
 
     ////////// GESTIÓN DEL MOVIMIENTO (ctx = contexto, se refiere a que, se ha producido un movimeinto pero, con que valor?)
